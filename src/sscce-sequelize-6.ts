@@ -57,7 +57,7 @@ export async function run() {
   expect(foundFoo2.length).to.equal(1);
 
   // Two dollar signs in separate words: totally NOT cool
-  const foo3Name = "$666 $420"; // note: two dollar signs WITH space-separation
+  const foo3Name = "$$666 $420"; // note: two dollar signs WITH space-separation
   await Foo.create({
     name: sequelize.fn("substr", foo3Name, "0"),
   });
