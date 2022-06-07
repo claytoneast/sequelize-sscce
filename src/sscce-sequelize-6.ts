@@ -38,4 +38,30 @@ export async function run() {
 
   console.log(await Foo.create({ name: 'TS foo' }));
   expect(await Foo.count()).to.equal(1);
+
+  // One dollar sign: totally cool
+  const foo1Name = "$666";
+  await Foo.create({
+    name: sequelize.fn("substr", foo1Name, "0"),
+  });
+  const foundFoo1 = await Foo.findAll({ where: { name: foo1Name } });
+  expect(foundFoo1.length).to.equal(1);
+
+  // Two dollar signs in the same "word", totally cool
+  const foo2Name = "$666$420"; // note: not space separated.
+  await Foo.create({
+    name: sequelize.fn("substr", foo2Name, "0"),
+  });
+
+  const foundFoo2 = await Foo.findAll({ where: { name: foo2Name } });
+  expect(foundFoo2.length).to.equal(1);
+
+  // Two dollar signs in separate words: totally NOT cool
+  const foo3Name = "$666 $420"; // note: two dollar signs WITH space-separation
+  await Foo.create({
+    name: sequelize.fn("substr", foo3Name, "0"),
+  });
+
+  const foundFoo3 = await Foo.findAll({ where: { name: foo3Name } });
+  expect(foundFoo3.length).to.equal(1); // test fails because it blew up above
 }
